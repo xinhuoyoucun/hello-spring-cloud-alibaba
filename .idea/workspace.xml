@@ -49,6 +49,7 @@
     </option>
   </component>
   <component name="ProjectId" id="1PMV8ll44P1R3ztijZ7ycPJ8RbL" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
     <property name="RequestMappingsPanelOrder0" value="0" />
@@ -286,12 +287,23 @@
       <workItem from="1565760291987" duration="15940000" />
       <workItem from="1566191974934" duration="912000" />
       <workItem from="1566964329822" duration="10049000" />
-      <workItem from="1566975913873" duration="7323000" />
+      <workItem from="1566975913873" duration="7626000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
