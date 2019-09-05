@@ -26,6 +26,7 @@ import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
@@ -37,6 +38,8 @@ import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.SuggestionBuilder;
+import org.elasticsearch.search.suggest.completion.CompletionSuggester;
+import org.elasticsearch.search.suggest.completion.CompletionSuggestion;
 import org.elasticsearch.search.suggest.term.TermSuggestion;
 import org.junit.Test;
 
@@ -409,12 +412,16 @@ public class AchievementTest extends AchievementApplicationTests {
         RestHighLevelClient client = AchievementTest.initClient();
 
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices("news");
+        searchRequest.indices("project_demo");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         //搜索内容
         //构建查询语句
-        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("newStr", "大海");
-        sourceBuilder.query(matchQueryBuilder);
+        MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder("数据挖掘","name","abstract_ch");
+//        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("name", "数据挖掘");
+        //对不同字段进行权重处理
+        multiMatchQueryBuilder.field("name",1.0f);
+        multiMatchQueryBuilder.field("abstract_ch",5.0f);
+        sourceBuilder.query(multiMatchQueryBuilder);
 
         //分页
         sourceBuilder.from(0);
@@ -424,17 +431,12 @@ public class AchievementTest extends AchievementApplicationTests {
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
         //高亮
-        HighlightBuilder highlightBuilder = new HighlightBuilder();
+//        HighlightBuilder highlightBuilder = new HighlightBuilder();
 //
-//        HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field("newStr");
-//        highlightTitle.highlighterType("unified");
-//        highlightBuilder.field(highlightTitle);
-
-        HighlightBuilder.Field highlightUser = new HighlightBuilder.Field("newStr");
-        highlightBuilder.field(highlightUser);
-
-        sourceBuilder.highlighter(highlightBuilder);
-
+//        HighlightBuilder.Field highlightUser = new HighlightBuilder.Field("name");
+//        highlightBuilder.field(highlightUser);
+//
+//        sourceBuilder.highlighter(highlightBuilder);
 
         searchRequest.source(sourceBuilder);
 
@@ -445,19 +447,18 @@ public class AchievementTest extends AchievementApplicationTests {
             Boolean terminatedEarly = searchResponse.isTerminatedEarly();
             boolean timedOut = searchResponse.isTimedOut();
             for (SearchHit searchHit:searchResponse.getHits()){
-
                 //常规返回
                 System.out.println("score:" + searchHit.getScore());
                 Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();
-                String newStr = sourceAsMap.get("newStr").toString();
+                String newStr = sourceAsMap.get("name").toString();
                 System.out.println("普通返回内容:"+newStr);
 
                 //高亮返回（<em></em>标签内的是高亮内容）
-                Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
-                HighlightField highlight = highlightFields.get("newStr");
-                Text[] fragments = highlight.fragments();
-                String fragmentString = fragments[0].string();
-                System.out.println("高亮返回内容:"+fragmentString);
+//                Map<String, HighlightField> highlightFields = searchHit.getHighlightFields();
+//                HighlightField highlight = highlightFields.get("name");
+//                Text[] fragments = highlight.fragments();
+//                String fragmentString = fragments[0].string();
+//                System.out.println("高亮返回内容:"+fragmentString);
 
             };
         } catch (IOException e) {
@@ -482,13 +483,15 @@ public class AchievementTest extends AchievementApplicationTests {
         RestHighLevelClient client = AchievementTest.initClient();
 
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices("news");
+        searchRequest.indices("tech_suggest");
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         //联想内容
 
-        SuggestionBuilder termSuggestionBuilder = SuggestBuilders.termSuggestion("newStr").text("台");
+        SuggestionBuilder completionSuggestionBuilder = SuggestBuilders.completionSuggestion("keyword").text("数据挖据");
+        //返回10个结果
+        completionSuggestionBuilder.size(10);
         SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("suggest_user", termSuggestionBuilder);
+        suggestBuilder.addSuggestion("suggest_user", completionSuggestionBuilder);
         sourceBuilder.suggest(suggestBuilder);
 
         //分页
@@ -503,10 +506,11 @@ public class AchievementTest extends AchievementApplicationTests {
         try {
             SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
             Suggest suggest = searchResponse.getSuggest();
-            TermSuggestion termSuggestion = suggest.getSuggestion("suggest_user");
+
+            CompletionSuggestion completionSuggestion = suggest.getSuggestion("suggest_user");
             System.out.println("联想词：");
-            for (TermSuggestion.Entry entry : termSuggestion.getEntries()) {
-                for (TermSuggestion.Entry.Option option : entry) {
+            for (CompletionSuggestion.Entry entry : completionSuggestion.getEntries()) {
+                for (CompletionSuggestion.Entry.Option option : entry) {
                     String suggestText = option.getText().string();
                     System.out.println(suggestText);
                 }

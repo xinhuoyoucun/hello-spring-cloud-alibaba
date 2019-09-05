@@ -1,9 +1,11 @@
 package feign.service;
 
-import com.laiyuan.hello.spring.cloud.alibaba.nacos.consumer.feign.service.fall.EchoServiceFallback;
+import feign.service.fall.SearchFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 
 /**
@@ -12,9 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @Description: TODO
  * @Version 1.0
  */
-@FeignClient(value = "nacos-provider", fallback = EchoServiceFallback.class)
-public interface EchoService {
+@FeignClient(value = "nacos-elasticsearch-achievement",fallback = SearchFallBack.class)
+public interface AchievementService {
 
-    @GetMapping(value = "/echo/{message}")
-    String echo(@PathVariable("message") String message);
+    @GetMapping(value = "/suggest")
+    List<String> suggest(@RequestParam(value ="text") String text);
 }

@@ -6,7 +6,7 @@ spring:
     # 使用 Naoos 作为服务注册发现
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.0.188:8848
     # 使用 Sentinel 作为熔断器
     sentinel:
       transport:
@@ -26,9 +26,8 @@ spring:
           uri: lb://nacos-consumer-feign
           # Predicate 翻译过来是“谓词”的意思，必须，主要作用是匹配用户的请求，有很多种用法
           predicates:
-            # Method 方法谓词，这里是匹配 GET 和 POST 请求
+            # Method 方法谓词，这里是匹配 GET 和 POST 请求,只允许 GET 和 POST
             - Method=GET,POST
-
 server:
   port: 9000
 

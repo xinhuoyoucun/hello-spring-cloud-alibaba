@@ -10,10 +10,10 @@
         <relativePath/>
     </parent>
 
-    <artifactId>hello-spring-cloud-alibaba-nacos-consumer-feign</artifactId>
+    <artifactId>hello-spring-cloud-elasticsearch-achievement-feign</artifactId>
     <packaging>jar</packaging>
 
-    <name>hello-spring-cloud-alibaba-nacos-consumer-feign</name>
+    <name>hello-spring-cloud-elasticsearch-achievement-feign</name>
 
     <dependencies>
         <!-- Spring Boot Begin -->
@@ -44,6 +44,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <!-- Spring Cloud End -->
     </dependencies>

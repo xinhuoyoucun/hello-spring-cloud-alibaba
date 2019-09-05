@@ -1,4 +1,4 @@
-package cn.zuochuang.itech4u.core.rest;
+package feign.common;
 
 /**
  * Created by laiyuan on 2017/3/21.
@@ -8,22 +8,25 @@ public class Response {
     private static final String OK = "ok";
     private static final String ERROR = "error";
 
-
+    private Integer code;
     private Meta meta;
     private Object data;
 
     public Response success() {
+        this.code = 20000;
         this.meta = new Meta(1,true, OK);
         return this;
     }
 
     public Response success(Object data) {
+        this.code = 20000;
         this.meta = new Meta(1,true, OK);
         this.data = data;
         return this;
     }
 
     public Response success(int result,Object data) {
+        this.code = 20000;
         this.meta = new Meta(result,true, OK);
         this.data = data;
         return this;
@@ -32,6 +35,7 @@ public class Response {
     public Response success(int result, Object data, String message) {
         this.meta = new Meta(result,true,message);
         this.data = data;
+        this.code = 20000;
         return this;
     }
 
@@ -91,5 +95,13 @@ public class Response {
         public int getResult() {
             return result;
         }
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 }

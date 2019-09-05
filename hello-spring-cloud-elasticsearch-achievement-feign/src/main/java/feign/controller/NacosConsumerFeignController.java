@@ -1,9 +1,14 @@
-package com.laiyuan.hello.spring.cloud.alibaba.nacos.consumer.feign.controller;
+package feign.controller;
 
-import com.laiyuan.hello.spring.cloud.alibaba.nacos.consumer.feign.service.EchoService;
+import feign.common.Response;
+import feign.service.AchievementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author by laiyuan
@@ -15,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class NacosConsumerFeignController {
 
     @Autowired
-    private EchoService echoService;
+    private AchievementService achievementService;
 
-    @GetMapping(value = "/echo/hi")
-    public String echo() {
-        return echoService.echo("Hi Feign");
+    @GetMapping(value = "/suggest")
+    public Response suggest(@RequestParam(value ="text") String text) {
+        List<String> list = achievementService.suggest(text);
+        return new Response().success(list);
     }
 }
