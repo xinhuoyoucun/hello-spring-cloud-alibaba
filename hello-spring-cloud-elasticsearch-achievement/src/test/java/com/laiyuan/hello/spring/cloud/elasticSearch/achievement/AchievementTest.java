@@ -31,6 +31,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
@@ -446,7 +447,8 @@ public class AchievementTest extends AchievementApplicationTests {
             TimeValue took = searchResponse.getTook();
             Boolean terminatedEarly = searchResponse.isTerminatedEarly();
             boolean timedOut = searchResponse.isTimedOut();
-            for (SearchHit searchHit:searchResponse.getHits()){
+            SearchHits searchHits =searchResponse.getHits();
+            for (SearchHit searchHit:searchHits){
                 //常规返回
                 System.out.println("score:" + searchHit.getScore());
                 Map<String, Object> sourceAsMap = searchHit.getSourceAsMap();

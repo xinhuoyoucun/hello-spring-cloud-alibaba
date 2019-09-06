@@ -2,8 +2,10 @@ package feign.service.fall;
 
 import feign.service.AchievementService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by laiyuan
@@ -15,6 +17,11 @@ import java.util.List;
 public class SearchFallBack implements AchievementService {
     @Override
     public List<String> suggest(String text) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> search(String text, int index, int pageSize) {
         return null;
     }
 }

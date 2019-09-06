@@ -1,6 +1,9 @@
 package com.laiyuan.hello.spring.cloud.elasticSearch.achievement.service;
 
+import com.laiyuan.hello.spring.cloud.elasticSearch.achievement.vo.ProjectVO;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by laiyuan
@@ -15,4 +18,12 @@ public interface AchievementService {
      * @return
      */
     List<String> suggest(String text);
+
+    /**
+     * 搜索
+     * @param text
+     * @return
+     */
+    Map<String,Object> search(String text, int index, int pageSize);
+
 }
